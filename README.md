@@ -6,8 +6,18 @@ Guía para instalar la app de ToDo List
 
 Para poder configurar la app en las diferentes plataformas, es necesario instalar los siguientes programas:
 
-- Android Studio
-- XCode
+- [Android Studio](https://developer.android.com/studio?hl=es-419)
+- [XCode](https://developer.apple.com/xcode/)
+- [Node 20](https://nodejs.org/en)
+
+# Ionic
+Una vez se tengan descargados los programas mencionados, se debe instalar Ionic CLI con el siguiente comando:
+
+- `npm i -g @ionic/cli`
+
+Posteriormente, procedemos a instalar las dependecias del proyecto con el siguiente comando:
+
+- `npm install`
 
 # Agregar plataformas
 
