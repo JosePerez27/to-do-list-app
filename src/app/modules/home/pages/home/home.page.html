@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title class="ion-text-center" color="primary">
-      {{ config.texts.title }}
+      {{ title }}
     </ion-title>
   </ion-toolbar>
 
@@ -20,7 +20,7 @@
 <ion-content [fullscreen]="true" class="ion-padding tasks-content" #content>
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" color="primary">{{ config.texts.title }}</ion-title>
+      <ion-title size="large" color="primary">{{ title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -30,7 +30,7 @@
         <ion-list class="tasks-list__actions" [inset]="true">
           <ion-text>{{ config.texts.category }}: {{ task.category }}</ion-text>
 
-          <ion-button color="danger" shape="round" size="small" (click)="deleteTask(i)">
+          <ion-button *ngIf="enableDeleteTask" color="danger" shape="round" size="small" (click)="deleteTask(i)">
             <ion-icon name="trash" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-list>

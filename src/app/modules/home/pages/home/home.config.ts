@@ -21,11 +21,14 @@ export const HomeConfig = Object.freeze({
     }
   },
   texts: {
-    title: 'Lista de tareas',
     pendingSegment: 'Pendientes',
     completedSegment: 'Completadas',
     category: 'Categoría',
     emptyPendingTasks: 'Aún no tienes tareas, ¡Crea una para empezar!',
     emptyCompletedTasks: 'Aún no tienes tareas completadas'
+  },
+  remoteConfigKeys: {
+    homeTitle: 'homeTitle',
+    enableDeleteTask: 'enableDeleteTask',
   }
 });

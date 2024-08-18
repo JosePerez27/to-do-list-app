@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomePage } from './pages/home/home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { CreateTaskComponentModule } from '../../components/create-task-organism/create-task.module';
+import { CreateTaskComponentModule } from '@components/create-task-organism/create-task.module';
 
 @NgModule({
   imports: [

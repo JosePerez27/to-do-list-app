@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
+import { Task } from '@app/interfaces';
 import { CreateTaskViewModel } from './create-task.view-model';
-import { Task } from '../../interfaces';
 import { CreateTaskConfig } from './create-task.config';
 
 @Component({

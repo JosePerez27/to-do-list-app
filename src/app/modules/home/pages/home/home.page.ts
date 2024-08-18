@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController, ToastController } from '@ionic/angular';
 
 import { HomeConfig } from './home.config';
-import { StorageService } from '../../../../services';
-import { Segment, StorageKeys, Task } from '../../../../interfaces';
-import { CreateTaskComponent } from '../../../../components/create-task-organism/create-task.organism';
+import { RemoteConfigType, Segment, StorageKeys, Task } from '@app/interfaces';
+import { StorageService, FirebaseService } from '@app/services';
+import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
 
 @Component({
   selector: 'app-home',
@@ -14,15 +14,18 @@ import { CreateTaskComponent } from '../../../../components/create-task-organism
 export class HomePage implements OnInit {
   @ViewChild('content') content: IonContent | undefined;
 
+  public title = '';
   public tasks: Task[] = [];
   public config = HomeConfig;
   public segment: Segment = Segment.PENDING;
+  public enableDeleteTask: boolean = true;
 
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
     private toastController: ToastController,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private firebaseService: FirebaseService
   ) {}
 
   public get tasksFilter() {
@@ -34,6 +37,16 @@ export class HomePage implements OnInit {
   }
 
   public async ngOnInit() {
+    this.title = this.firebaseService.getRemoteConfigValue(
+      this.config.remoteConfigKeys.homeTitle,
+      RemoteConfigType.STRING
+    );
+
+    this.enableDeleteTask = this.firebaseService.getRemoteConfigValue(
+      this.config.remoteConfigKeys.enableDeleteTask,
+      RemoteConfigType.BOOLEAN
+    );
+
     const data = await this.storageService.get(StorageKeys.TASKS);
 
     if (data) {
