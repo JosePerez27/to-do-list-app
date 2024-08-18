@@ -1,0 +1,27 @@
+<form *ngIf="viewModel.form" [formGroup]="viewModel.form">
+  <ion-list class="task-form" [inset]="true">
+    <ion-item lines="none" class="task-form__item">
+      <ion-textarea
+        label="Tu tarea"
+        labelPlacement="floating"
+        [autoGrow]="true"
+        rows="3"
+        [counter]="true"
+        maxlength="200"
+        [formControl]="viewModel.taskFormControl"
+        (ionChange)="viewModel.taskFormControl.updateValueAndValidity()"
+        (ionFocus)="viewModel.taskFormControl.markAsUntouched(); viewModel.taskFormControl.markAsPristine();"
+      >
+      </ion-textarea>
+    </ion-item>
+
+    <ion-button
+      class="ion-margin-top ion-text-capitalize"
+      expand="block"
+      (click)="createTask()"
+      [disabled]="viewModel.form.invalid"
+    >
+      Crear
+    </ion-button>
+  </ion-list>
+</form>

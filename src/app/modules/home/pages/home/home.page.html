@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="ion-text-center" color="primary">
+      Lista de tareas
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="segment" (ionChange)="segmentChange($event)">
+      <ion-segment-button [value]="segmentEnum.PENDING">
+        <ion-label class="ion-text-capitalize">Pendientes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="segmentEnum.COMPLETED">
+        <ion-label class="ion-text-capitalize">Completadas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding tasks-content" #content>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large" color="primary">Lista de tareas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card class="tasks-list" *ngFor="let task of tasksFilter, index as i">
+    <ion-card-header class="tasks-list__header">
+      <ion-card-subtitle>
+        <ion-list class="tasks-list__actions" [inset]="true">
+          <ion-text>Categoría: {{ task.category }}</ion-text>
+
+          <ion-button color="danger" shape="round" size="small" (click)="deleteTask(i)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-list>
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content class="ion-text-justify tasks-list__content">
+      <ion-item lines="none">
+        <ion-checkbox [checked]="task.status" (ionChange)="updateCheckStatus($event, i)">
+          <ion-label class="ion-text-wrap">{{ task.name }}</ion-label>
+        </ion-checkbox>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="tasksFilter.length === 0 && segment === segmentEnum.PENDING">
+    <ion-card-content class="ion-text-center">
+      Aún no tienes tareas, ¡Crea una para empezar!
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="tasksFilter.length === 0 && segment === segmentEnum.COMPLETED">
+    <ion-card-content class="ion-text-center">
+      Aún no tienes tareas completadas
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="task-add">
+    <ion-fab-button color="primary" (click)="openModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

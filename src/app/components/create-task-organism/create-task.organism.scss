@@ -1,0 +1,8 @@
+.task-form {
+  background: none;
+
+  &__item {
+    --border-radius: 10px;
+    --inner-padding-bottom: 8px;
+  }
+}
