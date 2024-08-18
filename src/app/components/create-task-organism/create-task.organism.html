@@ -2,12 +2,12 @@
   <ion-list class="task-form" [inset]="true">
     <ion-item lines="none" class="task-form__item">
       <ion-textarea
-        label="Tu tarea"
-        labelPlacement="floating"
-        [autoGrow]="true"
         rows="3"
+        [autoGrow]="true"
         [counter]="true"
-        maxlength="200"
+        labelPlacement="floating"
+        [label]="config.texts.inputLabel"
+        [maxlength]="config.maxLength"
         [formControl]="viewModel.taskFormControl"
         (ionChange)="viewModel.taskFormControl.updateValueAndValidity()"
         (ionFocus)="viewModel.taskFormControl.markAsUntouched(); viewModel.taskFormControl.markAsPristine();"
@@ -21,7 +21,7 @@
       (click)="createTask()"
       [disabled]="viewModel.form.invalid"
     >
-      Crear
+      {{ config.texts.createButton }}
     </ion-button>
   </ion-list>
 </form>

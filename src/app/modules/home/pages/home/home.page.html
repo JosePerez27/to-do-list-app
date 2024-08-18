@@ -1,16 +1,17 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title class="ion-text-center" color="primary">
-      Lista de tareas
+      {{ config.texts.title }}
     </ion-title>
   </ion-toolbar>
+
   <ion-toolbar>
     <ion-segment [value]="segment" (ionChange)="segmentChange($event)">
       <ion-segment-button [value]="segmentEnum.PENDING">
-        <ion-label class="ion-text-capitalize">Pendientes</ion-label>
+        <ion-label class="ion-text-capitalize">{{ config.texts.pendingSegment }}</ion-label>
       </ion-segment-button>
       <ion-segment-button [value]="segmentEnum.COMPLETED">
-        <ion-label class="ion-text-capitalize">Completadas</ion-label>
+        <ion-label class="ion-text-capitalize">{{ config.texts.completedSegment }}</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -19,7 +20,7 @@
 <ion-content [fullscreen]="true" class="ion-padding tasks-content" #content>
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" color="primary">Lista de tareas</ion-title>
+      <ion-title size="large" color="primary">{{ config.texts.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -27,7 +28,7 @@
     <ion-card-header class="tasks-list__header">
       <ion-card-subtitle>
         <ion-list class="tasks-list__actions" [inset]="true">
-          <ion-text>Categoría: {{ task.category }}</ion-text>
+          <ion-text>{{ config.texts.category }}: {{ task.category }}</ion-text>
 
           <ion-button color="danger" shape="round" size="small" (click)="deleteTask(i)">
             <ion-icon name="trash" slot="icon-only"></ion-icon>
@@ -47,13 +48,13 @@
 
   <ion-card *ngIf="tasksFilter.length === 0 && segment === segmentEnum.PENDING">
     <ion-card-content class="ion-text-center">
-      Aún no tienes tareas, ¡Crea una para empezar!
+      {{ config.texts.emptyPendingTasks }}
     </ion-card-content>
   </ion-card>
 
   <ion-card *ngIf="tasksFilter.length === 0 && segment === segmentEnum.COMPLETED">
     <ion-card-content class="ion-text-center">
-      Aún no tienes tareas completadas
+      {{ config.texts.emptyCompletedTasks }}
     </ion-card-content>
   </ion-card>
 

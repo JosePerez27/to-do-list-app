@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController, ToastController } from '@ionic/angular';
-import { Segment, StorageKeys, Task } from '../../../../interfaces';
+
+import { HomeConfig } from './home.config';
 import { StorageService } from '../../../../services';
+import { Segment, StorageKeys, Task } from '../../../../interfaces';
 import { CreateTaskComponent } from '../../../../components/create-task-organism/create-task.organism';
 
 @Component({
@@ -13,6 +15,7 @@ export class HomePage implements OnInit {
   @ViewChild('content') content: IonContent | undefined;
 
   public tasks: Task[] = [];
+  public config = HomeConfig;
   public segment: Segment = Segment.PENDING;
 
   constructor(
@@ -46,7 +49,7 @@ export class HomePage implements OnInit {
     this.tasksFilter[index].status = event.target.checked;
 
     if (event.target.checked) {
-      this.presentToast('¡Tarea completada!', 'success');
+      this.presentToast(this.config.toast.completedTask.message, 'success');
     }
 
     this.saveTasks();
@@ -69,29 +72,31 @@ export class HomePage implements OnInit {
     if (data) {
       this.tasks.unshift(data);
       this.saveTasks();
-      this.presentToast('Tarea creada exitosamente', 'success');
+      this.presentToast(this.config.toast.createdTask.message, 'success');
       this.content?.scrollToTop(250);
     }
   }
 
   public async deleteTask(index: number) {
+    const alertMessages = this.config.alert.deleteTask;
+
     const alert = await this.alertController.create({
-      header: 'Eliminar tarea',
-      message: '¿Está seguro que desea eliminar la tarea?',
+      header: alertMessages.header,
+      message: alertMessages.message,
       cssClass: 'ion-text-center',
       backdropDismiss: false,
       buttons: [
         {
-          text: 'No',
+          text: alertMessages.buttons.cancel,
           role: 'cancel',
         },
         {
-          text: 'Si',
+          text: alertMessages.buttons.accept,
           role: 'confirm',
           handler: () => {
             this.tasks.splice(index, 1);
             this.saveTasks();
-            this.presentToast('Tarea eliminada', 'danger');
+            this.presentToast(this.config.toast.deletedTask.message, 'danger');
           },
         },
       ],

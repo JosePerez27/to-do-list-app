@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+
 import { CreateTaskViewModel } from './create-task.view-model';
 import { Task } from '../../interfaces';
+import { CreateTaskConfig } from './create-task.config';
 
 @Component({
   selector: 'app-create-task',
@@ -11,6 +13,7 @@ import { Task } from '../../interfaces';
 export class CreateTaskComponent {
   public tasks: Task[] = [];
   public viewModel = new CreateTaskViewModel();
+  public config = CreateTaskConfig;
 
   constructor(private modalController: ModalController) {}
 
