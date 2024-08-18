@@ -37,12 +37,12 @@ export class HomePage implements OnInit {
   }
 
   public async ngOnInit() {
-    this.title = this.firebaseService.getRemoteConfigValue(
+    this.title = await this.firebaseService.getRemoteConfigValue(
       this.config.remoteConfigKeys.homeTitle,
       RemoteConfigType.STRING
     );
 
-    this.enableDeleteTask = this.firebaseService.getRemoteConfigValue(
+    this.enableDeleteTask = await this.firebaseService.getRemoteConfigValue(
       this.config.remoteConfigKeys.enableDeleteTask,
       RemoteConfigType.BOOLEAN
     );
@@ -85,6 +85,7 @@ export class HomePage implements OnInit {
     if (data) {
       this.tasks.unshift(data);
       this.saveTasks();
+      this.segment = Segment.PENDING;
       this.presentToast(this.config.toast.createdTask.message, 'success');
       this.content?.scrollToTop(250);
     }

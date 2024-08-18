@@ -18,7 +18,9 @@ export class FirebaseService {
     await this.initRemoteConfig();
   }
 
-  public getRemoteConfigValue<T>(name: string, valueType: RemoteConfigType) {
+  public async getRemoteConfigValue<T>(name: string, valueType: RemoteConfigType) {
+    await fetchAndActivate(this._remoteConfig);
+
     switch (valueType) {
       case RemoteConfigType.STRING:
         return getValue(this._remoteConfig, name).asString() as T;
@@ -34,7 +36,5 @@ export class FirebaseService {
     this._remoteConfig.settings.minimumFetchIntervalMillis = environment.minimumFetchIntervalMillis;
 
     this._remoteConfig.defaultConfig = DefaultRemoteConfig;
-
-    await fetchAndActivate(this._remoteConfig);
   }
 }
