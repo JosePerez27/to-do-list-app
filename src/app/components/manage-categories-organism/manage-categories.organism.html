@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center ion-text-wrap">{{ config.texts.title }}</ion-title>
+
+    <ion-button slot="end" fill="clear" shape="round" (click)="close()">
+      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="category-create">
+    <ion-button
+      color="primary"
+      shape="round"
+      (click)="createCategory()"
+    >
+      <ion-icon name="add" slot="icon-only"></ion-icon>
+    </ion-button>
+  </div>
+
+  <ion-card class="categories-list" *ngFor="let category of categories, index as i">
+    <ion-card-content class="ion-text-justify categories-list__content">
+      <ion-list class="categories-list__actions" [inset]="true">
+        <ion-item lines="none" class="categories-list__item">
+          <ion-text>{{ category }}</ion-text>
+
+          <ion-button
+            slot="end"
+            color="primary"
+            shape="round"
+            size="small"
+            class="categories-list__button"
+            (click)="editCategory(i)"
+          >
+            <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+
+          <ion-button
+            slot="end"
+            color="danger"
+            shape="round"
+            size="small"
+            class="categories-list__button"
+            (click)="deleteCategory(i)"
+          >
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="categories.length === 0">
+    <ion-card-content class="ion-text-center">
+      {{ config.texts.emptyCategories }}
+    </ion-card-content>
+  </ion-card>
+</ion-content>
