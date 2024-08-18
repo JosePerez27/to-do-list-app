@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 
 import { StorageKeys } from '@app/enums';
-import { StorageService } from '@app/services';
+import { StorageService, ToastService } from '@app/services';
 
 import { ManageCategoriesConfig } from './manage-categories.config';
 
@@ -18,7 +18,7 @@ export class ManageCategoriesComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
-    private toastController: ToastController,
+    private toastService: ToastService,
     private storageService: StorageService
   ) {}
 
@@ -54,14 +54,14 @@ export class ManageCategoriesComponent implements OnInit {
           role: 'confirm',
           handler: async (data) => {
             if (!data[alertMessages.input.name] || data[alertMessages.input.name].trim() === '') {
-              this.presentToast(this.config.toast.createCategory.errorMessage, 'danger');
+              this.toastService.showError(this.config.toast.createCategory.errorMessage);
 
               return;
             }
 
             this.categories.push(data[alertMessages.input.name]);
             await this.saveCategories();
-            this.presentToast(this.config.toast.createCategory.message, 'success');
+            this.toastService.showSuccess(this.config.toast.createCategory.message);
           },
         },
       ],
@@ -96,14 +96,14 @@ export class ManageCategoriesComponent implements OnInit {
           role: 'confirm',
           handler: async (data) => {
             if (!data[alertMessages.input.name] || data[alertMessages.input.name].trim() === '') {
-              this.presentToast(this.config.toast.editCategory.errorMessage, 'danger');
+              this.toastService.showError(this.config.toast.editCategory.errorMessage);
 
               return;
             }
 
             this.categories[index] = data[alertMessages.input.name];
             await this.saveCategories();
-            this.presentToast(this.config.toast.editCategory.message, 'success');
+            this.toastService.showSuccess(this.config.toast.editCategory.message);
           },
         },
       ],
@@ -131,7 +131,7 @@ export class ManageCategoriesComponent implements OnInit {
           handler: async () => {
             this.categories.splice(index, 1);
             await this.saveCategories();
-            this.presentToast(this.config.toast.deleteCategory.message, 'danger');
+            this.toastService.showError(this.config.toast.deleteCategory.message);
           },
         },
       ],
@@ -150,16 +150,5 @@ export class ManageCategoriesComponent implements OnInit {
 
   private async saveCategories() {
     await this.storageService.set(StorageKeys.CATEGORIES, JSON.stringify(this.categories));
-  }
-
-  private async presentToast(message: string, color: 'success' | 'danger') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'top',
-      color: color
-    });
-
-    await toast.present();
   }
 }

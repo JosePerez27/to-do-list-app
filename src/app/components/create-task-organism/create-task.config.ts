@@ -1,5 +1,6 @@
 export const CreateTaskConfig = Object.freeze({
   maxLength: 150,
+  rows: 3,
   texts: {
     inputLabel: 'Tu tarea',
     selectLabel: {

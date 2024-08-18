@@ -2,7 +2,7 @@
   <ion-list class="task-form" [inset]="true">
     <ion-item lines="none" class="task-form__item task-form__item-padding">
       <ion-textarea
-        rows="3"
+        [rows]="config.rows"
         [autoGrow]="true"
         [counter]="true"
         labelPlacement="floating"

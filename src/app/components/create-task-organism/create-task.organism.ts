@@ -14,9 +14,9 @@ import { CreateTaskConfig } from './create-task.config';
   styleUrls: ['create-task.organism.scss'],
 })
 export class CreateTaskComponent implements OnInit {
-  public viewModel = new CreateTaskViewModel();
-  public config = CreateTaskConfig;
   public categories: string[] = [];
+  public config = CreateTaskConfig;
+  public viewModel = new CreateTaskViewModel();
 
   constructor(
     private modalController: ModalController,
@@ -24,7 +24,7 @@ export class CreateTaskComponent implements OnInit {
   ) {}
 
   public async ngOnInit() {
-    this.getCategories();
+    await this.getCategories();
   }
 
   public createTask() {
