@@ -2,7 +2,16 @@
   background: none;
 
   &__item {
+    margin-bottom: 8px;
     --border-radius: 10px;
-    --inner-padding-bottom: 8px;
+
+    &-padding {
+      --inner-padding-bottom: 8px;
+    }
+  }
+
+  &__button {
+    --padding-start: 0px;
+    --padding-end: 0px;
   }
 }

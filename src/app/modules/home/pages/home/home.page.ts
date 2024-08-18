@@ -58,14 +58,14 @@ export class HomePage implements OnInit {
     this.segment = event.target.value;
   }
 
-  public updateCheckStatus(event: any, index: number) {
+  public async updateCheckStatus(event: any, index: number) {
     this.tasksFilter[index].status = event.target.checked;
 
     if (event.target.checked) {
       this.presentToast(this.config.toast.completedTask.message, 'success');
     }
 
-    this.saveTasks();
+    await this.saveTasks();
   }
 
   public async openModal() {
@@ -84,7 +84,7 @@ export class HomePage implements OnInit {
 
     if (data) {
       this.tasks.unshift(data);
-      this.saveTasks();
+      await this.saveTasks();
       this.segment = Segment.PENDING;
       this.presentToast(this.config.toast.createdTask.message, 'success');
       this.content?.scrollToTop(250);
@@ -107,9 +107,9 @@ export class HomePage implements OnInit {
         {
           text: alertMessages.buttons.accept,
           role: 'confirm',
-          handler: () => {
+          handler: async () => {
             this.tasks.splice(index, 1);
-            this.saveTasks();
+            await this.saveTasks();
             this.presentToast(this.config.toast.deletedTask.message, 'danger');
           },
         },
@@ -120,7 +120,7 @@ export class HomePage implements OnInit {
   }
 
   private async saveTasks() {
-    const saved = await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasks));
+    await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasks));
   }
 
   private async presentToast(message: string, color: 'success' | 'danger') {
