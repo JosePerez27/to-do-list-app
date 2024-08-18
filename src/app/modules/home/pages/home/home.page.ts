@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, IonContent, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController } from '@ionic/angular';
 
 import { Task } from '@app/interfaces';
-import { StorageService, FirebaseService } from '@app/services';
 import { RemoteConfigType, Segment, StorageKeys } from '@app/enums';
+import { StorageService, FirebaseService, ToastService } from '@app/services';
 import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
 
 import { HomeConfig } from './home.config';
@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
-    private toastController: ToastController,
+    private toastService: ToastService,
     private storageService: StorageService,
     private firebaseService: FirebaseService
   ) {}
@@ -39,21 +39,8 @@ export class HomePage implements OnInit {
   }
 
   public async ngOnInit() {
-    this.title = await this.firebaseService.getRemoteConfigValue(
-      this.config.remoteConfigKeys.homeTitle,
-      RemoteConfigType.STRING
-    );
-
-    this.enableDeleteTask = await this.firebaseService.getRemoteConfigValue(
-      this.config.remoteConfigKeys.enableDeleteTask,
-      RemoteConfigType.BOOLEAN
-    );
-
-    const data = await this.storageService.get(StorageKeys.TASKS);
-
-    if (data) {
-      this.tasks = JSON.parse(data);
-    }
+    await this.setRemoteConfigVariables();
+    await this.getTasks();
   }
 
   public segmentChange(event: any) {
@@ -64,7 +51,7 @@ export class HomePage implements OnInit {
     this.tasksFilter[index].status = event.target.checked;
 
     if (event.target.checked) {
-      this.presentToast(this.config.toast.completedTask.message, 'success');
+      this.toastService.showSuccess(this.config.toast.completedTask.message);
     }
 
     await this.saveTasks();
@@ -73,11 +60,11 @@ export class HomePage implements OnInit {
   public async openModal() {
     const modal = await this.modalController.create({
       component: CreateTaskComponent,
-      initialBreakpoint: 1,
-      breakpoints: [0, 1],
-      backdropBreakpoint: 0,
+      initialBreakpoint: this.config.modal.createTask.initialBreakpoint,
+      breakpoints: this.config.modal.createTask.breakpoints,
+      backdropBreakpoint: this.config.modal.createTask.backdropBreakpoint,
       handleBehavior: 'cycle',
-      cssClass: 'height-auto'
+      cssClass: this.config.modal.createTask.cssClass,
     });
 
     modal.present();
@@ -87,9 +74,10 @@ export class HomePage implements OnInit {
     if (data) {
       this.tasks.unshift(data);
       await this.saveTasks();
+
       this.segment = Segment.PENDING;
-      this.presentToast(this.config.toast.createdTask.message, 'success');
       this.content?.scrollToTop(250);
+      this.toastService.showSuccess(this.config.toast.createdTask.message);
     }
   }
 
@@ -112,7 +100,7 @@ export class HomePage implements OnInit {
           handler: async () => {
             this.tasks.splice(index, 1);
             await this.saveTasks();
-            this.presentToast(this.config.toast.deletedTask.message, 'danger');
+            this.toastService.showError(this.config.toast.deletedTask.message);
           },
         },
       ],
@@ -121,18 +109,27 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
+  private async getTasks() {
+    const data = await this.storageService.get(StorageKeys.TASKS);
+
+    if (data) {
+      this.tasks = JSON.parse(data);
+    }
+  }
+
   private async saveTasks() {
     await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasks));
   }
 
-  private async presentToast(message: string, color: 'success' | 'danger') {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'top',
-      color: color
-    });
+  private async setRemoteConfigVariables() {
+    this.title = await this.firebaseService.getRemoteConfigValue(
+      this.config.remoteConfigKeys.homeTitle,
+      RemoteConfigType.STRING
+    );
 
-    await toast.present();
+    this.enableDeleteTask = await this.firebaseService.getRemoteConfigValue(
+      this.config.remoteConfigKeys.enableDeleteTask,
+      RemoteConfigType.BOOLEAN
+    );
   }
 }

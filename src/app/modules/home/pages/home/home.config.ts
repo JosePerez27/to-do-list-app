@@ -20,6 +20,14 @@ export const HomeConfig = Object.freeze({
       }
     }
   },
+  modal: {
+    createTask: {
+      initialBreakpoint: 1,
+      breakpoints: [0, 1],
+      backdropBreakpoint: 0,
+      cssClass: 'height-auto'
+    }
+  },
   texts: {
     pendingSegment: 'Pendientes',
     completedSegment: 'Completadas',
