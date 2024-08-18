@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 
 import { StorageKeys } from '@app/enums';
-import { CategoriesModel } from '@app/models';
+import { CategoriesModel, TasksModel } from '@app/models';
 import { StorageService, ToastService } from '@app/services';
 
 import { ManageCategoriesConfig } from './manage-categories.config';
@@ -20,7 +20,8 @@ export class ManageCategoriesComponent {
     private alertController: AlertController,
     private toastService: ToastService,
     private storageService: StorageService,
-    private categoriesModel: CategoriesModel
+    private categoriesModel: CategoriesModel,
+    private tasksModel: TasksModel
   ) {}
 
   public get categories() {
@@ -54,13 +55,15 @@ export class ManageCategoriesComponent {
           text: alertMessages.buttons.accept,
           role: 'confirm',
           handler: async (data) => {
-            if (!data[alertMessages.input.name] || data[alertMessages.input.name].trim() === '') {
+            const newCategory = data[alertMessages.input.name];
+
+            if (!newCategory || newCategory.trim() === '') {
               this.toastService.showError(this.config.toast.createCategory.errorMessage);
 
               return;
             }
 
-            this.categoriesModel.categories.push(data[alertMessages.input.name]);
+            this.categoriesModel.categories.push(newCategory);
             await this.saveCategories();
             this.toastService.showSuccess(this.config.toast.createCategory.message);
           },
@@ -96,14 +99,28 @@ export class ManageCategoriesComponent {
           text: alertMessages.buttons.accept,
           role: 'confirm',
           handler: async (data) => {
-            if (!data[alertMessages.input.name] || data[alertMessages.input.name].trim() === '') {
+            const newCategory = data[alertMessages.input.name];
+
+            if (!newCategory || newCategory.trim() === '') {
               this.toastService.showError(this.config.toast.editCategory.errorMessage);
 
               return;
             }
 
-            this.categoriesModel.categories[index] = data[alertMessages.input.name];
+
+            const updatedTasks = this.tasksModel.tasks.map((task) => {
+              if (task.category === value) {
+                task.category = newCategory;
+              }
+
+              return task;
+            });
+
+            this.tasksModel.setTasks(updatedTasks);
+            this.categoriesModel.categories[index] = newCategory;
+
             await this.saveCategories();
+            await this.saveTasks();
             this.toastService.showSuccess(this.config.toast.editCategory.message);
           },
         },
@@ -143,5 +160,9 @@ export class ManageCategoriesComponent {
 
   private async saveCategories() {
     await this.storageService.set(StorageKeys.CATEGORIES, JSON.stringify(this.categoriesModel.categories));
+  }
+
+  private async saveTasks() {
+    await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasksModel.tasks));
   }
 }
