@@ -29,6 +29,12 @@ export const HomeConfig = Object.freeze({
     }
   },
   texts: {
+    filterBy: {
+      label: 'Filtrar por',
+      options: {
+        message: 'Categoría',
+      }
+    },
     pendingSegment: 'Pendientes',
     completedSegment: 'Completadas',
     category: 'Categoría',

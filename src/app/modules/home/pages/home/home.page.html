@@ -24,6 +24,23 @@
     </ion-toolbar>
   </ion-header>
 
+  <ion-list class="tasks-filter" [inset]="true">
+    <ion-item lines="none">
+      <ion-select
+        interface="popover"
+        [multiple]="true"
+        justify="space-between"
+        [label]="config.texts.filterBy.label"
+        [interfaceOptions]="config.texts.filterBy.options"
+        [formControl]="viewModel.categoriesFormControl"
+        (ionChange)="viewModel.categoriesFormControl.updateValueAndValidity()"
+        (ionFocus)="viewModel.categoriesFormControl.markAsUntouched(); viewModel.categoriesFormControl.markAsPristine();"
+      >
+        <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
   <ion-card class="tasks-list" *ngFor="let task of tasksFilter, index as i">
     <ion-card-header class="tasks-list__header">
       <ion-card-subtitle>

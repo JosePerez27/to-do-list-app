@@ -7,6 +7,7 @@ import { StorageService, FirebaseService, ToastService } from '@app/services';
 import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
 
 import { HomeConfig } from './home.config';
+import { HomeViewModel } from './home.view-model';
 
 @Component({
   selector: 'app-home',
@@ -19,8 +20,10 @@ export class HomePage implements OnInit {
   public title = '';
   public tasks: Task[] = [];
   public config = HomeConfig;
+  public categories: string[] = [];
   public segment: Segment = Segment.PENDING;
   public enableDeleteTask: boolean = true;
+  public viewModel = new HomeViewModel();
 
   constructor(
     private modalController: ModalController,
@@ -31,7 +34,13 @@ export class HomePage implements OnInit {
   ) {}
 
   public get tasksFilter() {
-    return this.tasks.filter((task) => task.status === (this.segment === Segment.COMPLETED));
+    let tasks = this.tasks.filter((task) => task.status === (this.segment === Segment.COMPLETED));
+
+    if (this.viewModel.categories?.length > 0) {
+      tasks = tasks.filter((task) => this.viewModel.categories.includes(task.category));
+    }
+
+    return tasks;
   }
 
   public get segmentEnum() {
@@ -41,6 +50,7 @@ export class HomePage implements OnInit {
   public async ngOnInit() {
     await this.setRemoteConfigVariables();
     await this.getTasks();
+    await this.getCategories();
   }
 
   public segmentChange(event: any) {
@@ -70,6 +80,7 @@ export class HomePage implements OnInit {
     modal.present();
 
     const { data } = await modal.onDidDismiss();
+    await this.getCategories();
 
     if (data) {
       this.tasks.unshift(data);
@@ -109,7 +120,17 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
+  private async getCategories() {
+    this.categories = [];
+    const data = await this.storageService.get(StorageKeys.CATEGORIES);
+
+    if (data) {
+      this.categories = JSON.parse(data);
+    }
+  }
+
   private async getTasks() {
+    this.tasks = [];
     const data = await this.storageService.get(StorageKeys.TASKS);
 
     if (data) {

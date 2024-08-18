@@ -141,6 +141,7 @@ export class ManageCategoriesComponent implements OnInit {
   }
 
   private async getCategories() {
+    this.categories = [];
     const data = await this.storageService.get(StorageKeys.CATEGORIES);
 
     if (data) {
