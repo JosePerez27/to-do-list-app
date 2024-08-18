@@ -67,6 +67,22 @@ Para correr en dispositivos físicos o emuladores, se deben ejecutar los siguien
 
 - `ionic cordova run android`
 
+Tambien es posible ejecutar la App utilizando Android Studio, se debe abrir la carpeta del proyecto ubicado en la siguiente ruta:
+
+- `platforms/android`
+
+Una vez abierto en Android Studio, se puede ejecutar la App en emulador o dispositivo físico utilizando el siguiente comando:
+
+- `control + r`
+
 ## iOS
 
 - `ionic cordova run ios`
+
+De igual manera, se puede ejecutar la App utilizando XCode, se debe abrir el archivo `.xcworkspace` ubicado en la siguiente ruta:
+
+- `platforms/ios/ToDo List App.xcworkspace`
+
+Una vez abierto en XCode, se puede ejecutar la App en emulador o dispositivo físico utilizando el siguiente comando:
+
+- `command + r`
