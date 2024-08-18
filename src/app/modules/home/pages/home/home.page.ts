@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController } from '@ionic/angular';
 
-import { Task } from '@app/interfaces';
+import { TasksModel } from '@app/models';
 import { RemoteConfigType, Segment, StorageKeys } from '@app/enums';
 import { StorageService, FirebaseService, ToastService } from '@app/services';
 import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
@@ -18,7 +18,6 @@ export class HomePage implements OnInit {
   @ViewChild('content') content: IonContent | undefined;
 
   public title = '';
-  public tasks: Task[] = [];
   public config = HomeConfig;
   public categories: string[] = [];
   public segment: Segment = Segment.PENDING;
@@ -30,11 +29,12 @@ export class HomePage implements OnInit {
     private alertController: AlertController,
     private toastService: ToastService,
     private storageService: StorageService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private tasksModel: TasksModel
   ) {}
 
   public get tasksFilter() {
-    let tasks = this.tasks.filter((task) => task.status === (this.segment === Segment.COMPLETED));
+    let tasks = this.tasksModel.tasks.filter((task) => task.status === (this.segment === Segment.COMPLETED));
 
     if (this.viewModel.categories?.length > 0) {
       tasks = tasks.filter((task) => this.viewModel.categories.includes(task.category));
@@ -83,7 +83,7 @@ export class HomePage implements OnInit {
     await this.getCategories();
 
     if (data) {
-      this.tasks.unshift(data);
+      this.tasksModel.tasks.unshift(data);
       await this.saveTasks();
 
       this.segment = Segment.PENDING;
@@ -109,7 +109,7 @@ export class HomePage implements OnInit {
           text: alertMessages.buttons.accept,
           role: 'confirm',
           handler: async () => {
-            this.tasks.splice(index, 1);
+            this.tasksModel.tasks.splice(index, 1);
             await this.saveTasks();
             this.toastService.showError(this.config.toast.deletedTask.message);
           },
@@ -130,16 +130,16 @@ export class HomePage implements OnInit {
   }
 
   private async getTasks() {
-    this.tasks = [];
+    this.tasksModel.reset();
     const data = await this.storageService.get(StorageKeys.TASKS);
 
     if (data) {
-      this.tasks = JSON.parse(data);
+      this.tasksModel.setTasks(JSON.parse(data));
     }
   }
 
   private async saveTasks() {
-    await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasks));
+    await this.storageService.set(StorageKeys.TASKS, JSON.stringify(this.tasksModel.tasks));
   }
 
   private async setRemoteConfigVariables() {
