@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController, ToastController } from '@ionic/angular';
 
-import { HomeConfig } from './home.config';
-import { RemoteConfigType, Segment, StorageKeys, Task } from '@app/interfaces';
+import { Task } from '@app/interfaces';
 import { StorageService, FirebaseService } from '@app/services';
+import { RemoteConfigType, Segment, StorageKeys } from '@app/enums';
 import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
+
+import { HomeConfig } from './home.config';
 
 @Component({
   selector: 'app-home',

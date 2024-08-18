@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { StorageKeys } from '@app/interfaces';
+import { StorageKeys } from '@app/enums';
 import { StorageService } from '@app/services';
 import { ManageCategoriesComponent } from '../manage-categories-organism/manage-categories.organism';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 
-import { StorageKeys } from '@app/interfaces';
+import { StorageKeys } from '@app/enums';
 import { StorageService } from '@app/services';
 
 import { ManageCategoriesConfig } from './manage-categories.config';

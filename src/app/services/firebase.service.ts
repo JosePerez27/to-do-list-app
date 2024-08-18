@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getRemoteConfig, getValue, fetchAndActivate, RemoteConfig } from "firebase/remote-config";
 
-import { RemoteConfigType } from "@app/interfaces";
+import { RemoteConfigType } from "@app/enums";
 import { environment } from '@environments/environment';
+
 import { DefaultRemoteConfig } from "./firebase-remote-config";
 
 @Injectable({
