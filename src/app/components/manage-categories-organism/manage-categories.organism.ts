@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 
 import { StorageKeys } from '@app/enums';
+import { CategoriesModel } from '@app/models';
 import { StorageService, ToastService } from '@app/services';
 
 import { ManageCategoriesConfig } from './manage-categories.config';
@@ -11,19 +12,19 @@ import { ManageCategoriesConfig } from './manage-categories.config';
   templateUrl: 'manage-categories.organism.html',
   styleUrls: ['manage-categories.organism.scss'],
 })
-export class ManageCategoriesComponent implements OnInit {
-  public categories: string[] = [];
+export class ManageCategoriesComponent {
   public config = ManageCategoriesConfig;
 
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
     private toastService: ToastService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private categoriesModel: CategoriesModel
   ) {}
 
-  public async ngOnInit() {
-    await this.getCategories();
+  public get categories() {
+    return this.categoriesModel.categories;
   }
 
   public close() {
@@ -59,7 +60,7 @@ export class ManageCategoriesComponent implements OnInit {
               return;
             }
 
-            this.categories.push(data[alertMessages.input.name]);
+            this.categoriesModel.categories.push(data[alertMessages.input.name]);
             await this.saveCategories();
             this.toastService.showSuccess(this.config.toast.createCategory.message);
           },
@@ -71,7 +72,7 @@ export class ManageCategoriesComponent implements OnInit {
   }
 
   public async editCategory(index: number) {
-    const value = this.categories[index];
+    const value = this.categoriesModel.categories[index];
     const alertMessages = this.config.alert.editCategory;
 
     const alert = await this.alertController.create({
@@ -101,7 +102,7 @@ export class ManageCategoriesComponent implements OnInit {
               return;
             }
 
-            this.categories[index] = data[alertMessages.input.name];
+            this.categoriesModel.categories[index] = data[alertMessages.input.name];
             await this.saveCategories();
             this.toastService.showSuccess(this.config.toast.editCategory.message);
           },
@@ -129,7 +130,7 @@ export class ManageCategoriesComponent implements OnInit {
           text: alertMessages.buttons.accept,
           role: 'confirm',
           handler: async () => {
-            this.categories.splice(index, 1);
+            this.categoriesModel.categories.splice(index, 1);
             await this.saveCategories();
             this.toastService.showError(this.config.toast.deleteCategory.message);
           },
@@ -140,16 +141,7 @@ export class ManageCategoriesComponent implements OnInit {
     await alert.present();
   }
 
-  private async getCategories() {
-    this.categories = [];
-    const data = await this.storageService.get(StorageKeys.CATEGORIES);
-
-    if (data) {
-      this.categories = JSON.parse(data);
-    }
-  }
-
   private async saveCategories() {
-    await this.storageService.set(StorageKeys.CATEGORIES, JSON.stringify(this.categories));
+    await this.storageService.set(StorageKeys.CATEGORIES, JSON.stringify(this.categoriesModel.categories));
   }
 }

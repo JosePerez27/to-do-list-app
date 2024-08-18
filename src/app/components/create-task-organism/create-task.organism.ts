@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { StorageKeys } from '@app/enums';
-import { StorageService } from '@app/services';
+import { CategoriesModel } from '@app/models';
 import { ManageCategoriesComponent } from '../manage-categories-organism/manage-categories.organism';
 
 import { CreateTaskViewModel } from './create-task.view-model';
@@ -13,18 +12,17 @@ import { CreateTaskConfig } from './create-task.config';
   templateUrl: 'create-task.organism.html',
   styleUrls: ['create-task.organism.scss'],
 })
-export class CreateTaskComponent implements OnInit {
-  public categories: string[] = [];
+export class CreateTaskComponent {
   public config = CreateTaskConfig;
   public viewModel = new CreateTaskViewModel();
 
   constructor(
     private modalController: ModalController,
-    private storageService: StorageService
+    private categoriesModel: CategoriesModel
   ) {}
 
-  public async ngOnInit() {
-    await this.getCategories();
+  public get categories() {
+    return this.categoriesModel.categories;
   }
 
   public createTask() {
@@ -45,15 +43,5 @@ export class CreateTaskComponent implements OnInit {
     modal.present();
 
     await modal.onDidDismiss();
-    await this.getCategories();
-  }
-
-  private async getCategories() {
-    this.categories = [];
-    const data = await this.storageService.get(StorageKeys.CATEGORIES);
-
-    if (data) {
-      this.categories = JSON.parse(data);
-    }
   }
 }

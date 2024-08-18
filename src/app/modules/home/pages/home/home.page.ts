@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController } from '@ionic/angular';
 
-import { TasksModel } from '@app/models';
+import { CategoriesModel, TasksModel } from '@app/models';
 import { RemoteConfigType, Segment, StorageKeys } from '@app/enums';
 import { StorageService, FirebaseService, ToastService } from '@app/services';
 import { CreateTaskComponent } from '@components/create-task-organism/create-task.organism';
@@ -19,7 +19,6 @@ export class HomePage implements OnInit {
 
   public title = '';
   public config = HomeConfig;
-  public categories: string[] = [];
   public segment: Segment = Segment.PENDING;
   public enableDeleteTask: boolean = true;
   public viewModel = new HomeViewModel();
@@ -30,7 +29,8 @@ export class HomePage implements OnInit {
     private toastService: ToastService,
     private storageService: StorageService,
     private firebaseService: FirebaseService,
-    private tasksModel: TasksModel
+    private tasksModel: TasksModel,
+    private categoriesModel: CategoriesModel
   ) {}
 
   public get tasksFilter() {
@@ -41,6 +41,10 @@ export class HomePage implements OnInit {
     }
 
     return tasks;
+  }
+
+  public get categories() {
+    return this.categoriesModel.categories;
   }
 
   public get segmentEnum() {
@@ -80,7 +84,6 @@ export class HomePage implements OnInit {
     modal.present();
 
     const { data } = await modal.onDidDismiss();
-    await this.getCategories();
 
     if (data) {
       this.tasksModel.tasks.unshift(data);
@@ -121,11 +124,11 @@ export class HomePage implements OnInit {
   }
 
   private async getCategories() {
-    this.categories = [];
+    this.categoriesModel.reset();
     const data = await this.storageService.get(StorageKeys.CATEGORIES);
 
     if (data) {
-      this.categories = JSON.parse(data);
+      this.categoriesModel.setCategories(JSON.parse(data))
     }
   }
 
