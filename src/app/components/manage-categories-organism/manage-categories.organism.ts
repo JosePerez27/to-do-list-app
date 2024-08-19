@@ -63,7 +63,7 @@ export class ManageCategoriesComponent {
               return;
             }
 
-            this.categoriesModel.categories.push(newCategory);
+            this.categoriesModel.categories.push(newCategory.trim());
             await this.saveCategories();
             this.toastService.showSuccess(this.config.toast.createCategory.message);
           },
@@ -110,14 +110,14 @@ export class ManageCategoriesComponent {
 
             const updatedTasks = this.tasksModel.tasks.map((task) => {
               if (task.category === value) {
-                task.category = newCategory;
+                task.category = newCategory.trim();
               }
 
               return task;
             });
 
             this.tasksModel.setTasks(updatedTasks);
-            this.categoriesModel.categories[index] = newCategory;
+            this.categoriesModel.categories[index] = newCategory.trim();
 
             await this.saveCategories();
             await this.saveTasks();
